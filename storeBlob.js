@@ -27,7 +27,7 @@ const token = process.env.API_KEY;
 const storage = new NFTStorage({ token });
 const upload = multer({ dest: "uploads/" });
 app.post("/upload_article", upload.single("file"), async (req, res) => {
-    // expects a file: FileObject in body of request
+    // expects a formData object in body of request with file appended
     const file = req.file;
     const filebuffer = fs.readFileSync(file.path);
     const blob = new Blob([filebuffer]);
