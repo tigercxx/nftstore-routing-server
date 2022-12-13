@@ -1,5 +1,6 @@
 const express = require("express");
 const multer = require("multer");
+const bodyParser = require('body-parser')
 const fs = require("fs");
 const { Blob } = require("buffer");
 const app = express();
@@ -28,9 +29,28 @@ const storage = new NFTStorage({ token });
 const upload = multer({ dest: "uploads/" });
 app.post("/upload_article", upload.single("file"), async (req, res) => {
     // expects a formData object in body of request with file appended
-    const file = req.file;
+    const file = req.file
+    console.log(file);
     const filebuffer = fs.readFileSync(file.path);
     const blob = new Blob([filebuffer]);
+    try {
+        // returns a cid of the file stored on NFTStorage
+        const cid = await storage.storeBlob(blob);
+        res.json({
+            link: `https://nftstorage.link/ipfs/${cid}`,
+        });
+    } catch (err) {
+        console.error(err);
+        console.log(err.message);
+    }
+});
+
+app.post("/upload_metadata", express.json({type: '*/*'}), async (req, res) => {
+    // expects a formData object in body of request with file appended
+    const data = JSON.stringify(req.body);
+    console.log(data);
+    const blob = new Blob([data]);
+    console.log(blob);
     try {
         // returns a cid of the file stored on NFTStorage
         const cid = await storage.storeBlob(blob);
