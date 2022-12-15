@@ -19,7 +19,7 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.listen(port, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log(`Example app listening on port ${port}`);
 });
 // token from NFTStorage
