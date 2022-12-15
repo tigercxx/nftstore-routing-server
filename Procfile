@@ -1,0 +1,1 @@
+web: node storeBlob.js
